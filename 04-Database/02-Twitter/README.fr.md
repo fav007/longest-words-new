@@ -67,6 +67,8 @@ DATABASE_URL="postgresql://postgres:<password_if_necessary>@localhost/twitter_ap
 # DATABASE_URL="postgresql://localhost/twitter_api_flask"
 ```
 
+:point_right: Retournez sur [localhost:5000](http://localhost:5000/). Est-ce que tout va bien ?
+
 Si vous obtenez un `sqlalchemy.exc.OperationalError`, vérifiez votre `DATABASE_URL`. Votre mot de passe ne doit pas contenir les symboles `<`, `>`.
 
 ```bash
@@ -221,6 +223,7 @@ pipenv run flask shell
 >>> db.session.query(Tweet).all()
 # Hooray!
 ```
+Tapez `exit()` puis Entrée pour sortir du "flask shell".
 
 ## Mise à jour du code du contrôleur de l'API
 
@@ -257,6 +260,14 @@ Félicitations ! Le site [localhost:5000/tweets/1](http://localhost:5000/tweets/
 Laissons seulement la route `GET /tweets/:id` fonctionner, sans toucher aux autres, et essayons de corriger les tests d'abord avant d'y revenir.
 
 ## Mettre à jour les tests
+
+🚨 **Mise à jour de flask-testing**
+Lancez la commande `pipenv graph` et identifiez la version du package `flask-testing` que vous avez installé hier. Si la version est inférieure à **0.8.1**, il faut absolument la mettre à jour pour pouvoir faire tourner les tests avec une base de donnée!
+Pour celà, ouvrez le fichier `Pipfile`, et remplacer la ligne `flask-testing = "*"` par `flask-testing = "~=0.8.1"`, puis dans le terminal:
+
+```bash
+pipenv install --dev
+```
 
 Ouvrez le fichier `tests/apis/test_tweet_views.py`. Avant de se lancer dans le remplacement du `tweet_repository` par un `db.session`, faisons une pause et réfléchissons à ce que nous faisons.
 
@@ -368,6 +379,9 @@ Et voici le code de `app/apis/tweets.py` où nous devons mettre à jour les occu
 ```python
 # [...]
 
+@api.route('/<int:id>')  # route extension (ie: /tweets/<int:id>)
+@api.response(404, 'Tweet not found')
+@api.param('id', 'The tweet unique identifier')
 class TweetResource(Resource):
     @api.marshal_with(json_tweet)
     def get(self, id):
