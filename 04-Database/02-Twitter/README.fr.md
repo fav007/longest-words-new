@@ -46,8 +46,8 @@ FLASK_ENV=development pipenv run flask run
 Comme dans l'exercice précédent, nous devons installer quelques outils :
 
 ```bash
-pipenv install psycopg2-binary gunicorn
-pipenv install flask-sqlalchemy flask-migrate flask-script
+pipenv install psycopg2-binary gunicorn python-dotenv
+pipenv install flask-sqlalchemy flask-migrate
 ```
 
 Nous devons configurer la base de données utilisée en utilisant une variable d'environnement, le plus simple est d'utiliser le package `python-dotenv` avec un fichier `.env` :
@@ -161,44 +161,34 @@ Nous avons besoin d'une base de données locale pour notre application :
 
 ```bash
 winpty psql -U postgres -c "CREATE DATABASE twitter_api_flask"
+
+# MAC OS
+# createdb twitter_api_flask
 ```
 
-Ensuite, nous devons isoler un fichier utilitaire pour exécuter les commandes sans polluer le fichier principal `wsgi.py`. Voici comment cela se passe :
+Ensuite, nous devons modifier le fichier `app/__init__.py` pour que le module `flask-migrate` puisse identifier les changements effectués dans les modèle de l'app Python afin de les retranscrire en tant que migration dans la db:
 
-```bash
-touch manage.py
-```
 
 ```python
-# manage.py
+# app/__init__.py
+# [...]
+from flask_migrate import Migrate
 
-from flask_script import Manager
-from flask_migrate import Migrate, MigrateCommand
-
-from wsgi import create_app
-from app import db
-
-application = create_app()
-
-migrate = Migrate(application, db)
-
-manager = Manager(application)
-manager.add_command('db', MigrateCommand)
-
-if __name__ == '__main__':
-    manager.run()
+# After db.init_app(app)
+migrate = Migrate(app, db)
+# [...]
 ```
 
 Maintenant nous pouvons utiliser Alembic (lancez `pipenv graph` pour voir où il en est) !
 
 ```bash
-pipenv run python manage.py db init
+pipenv run flask db init
 ```
 
 Cette commande a créé un dossier `migrations`, avec `versions` qui est vide dedans. Il est temps de lancer la première migration avec la création de la table `tweets` à partir de la classe `Tweet` de `app/models.py`.
 
 ```bash
-pipenv run python manage.py db migrate -m "Create tweets table"
+pipenv run flask db migrate -m "Create tweets table"
 ```
 
 Ouvrez le dossier `migrations/versions` : voyez-vous un premier fichier de migration ? Allez-y, ouvrez-le et lisez-le ! C'est un fichier que vous **pouvez** modifier si vous n'êtes pas satisfait de ce qui a été généré automatiquement. En fait, c'est quelque chose que l'outil vous dit :
@@ -210,10 +200,10 @@ Ouvrez le dossier `migrations/versions` : voyez-vous un premier fichier de migra
 Lorsque vous êtes satisfait de la migration, il est temps de l'exécuter sur la base de données locale :
 
 ```bash
-pipenv run python manage.py db upgrade
+pipenv run flask db upgrade
 ```
 
-Et c'est tout ! Il y a maintenant une table `tweets` dans la base de données locale `witter_api_flask`. Elle est vide pour l'instant, mais elle existe bel et bien !
+Et c'est tout ! Il y a maintenant une table `tweets` dans la base de données locale `twitter_api_flask`. Elle est vide pour l'instant, mais elle existe bel et bien !
 
 ## Ajouter un premier tweet à partir de shell
 
@@ -251,12 +241,12 @@ Regardez le message d'erreur dans le terminal et essayez de corriger le code _vo
 
 ```python
 # app/apis/tweets.py
-# Add this at the beginning of the file:
+# Ajouter cette ligne en début de fichier
 from app import db
 
-# Then in the `TweetResource#get` replace this line:
+# Dans `TweetResource#get` remplacer cette ligne:
 #   tweet = tweet_repository.get(tweet_id))
-# with:
+# par:
 tweet = db.session.query(Tweet).get(tweet_id)
 ```
 
@@ -289,6 +279,9 @@ Voici comment nous allons atteindre cet objectif. Tout d'abord, nous devons cré
 
 ```bash
 winpty psql -U postgres -c "CREATE DATABASE twitter_api_flask_test"
+
+# MAC OS
+# createdb twitter_api_flask_test
 ```
 
 Et puis nous pouvons mettre à jour notre classe `TestTweetViews` avec :
