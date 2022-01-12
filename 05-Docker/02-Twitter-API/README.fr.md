@@ -9,13 +9,13 @@ Nous avons déjà mis en place une application web et une base de données, et a
 ## 0. Configuration
 
 Nous allons continuer à partir de la correction d'hier :
-:point_right: [github.com/ssaunier/twitter-api](https://github.com/ssaunier/twitter-api)
+:point_right: [https://github.com/mattrousseau/twitter-api-solution](https://github.com/mattrousseau/twitter-api-solution)
 
 Commencez par le code suivant (en utilisant la branche `docker`) :
 
 ```bash
 cd ~/code/<user.github_nickname>
-git clone git@github.com:ssaunier/twitter-api.git twitter-api-docker
+git clone git@github.com:mattrousseau/twitter-api-solution.git twitter-api-docker
 cd twitter-api-docker
 git checkout docker  # récupérer cette branche avant de changer la version distante
 git remote rm origin
@@ -44,12 +44,6 @@ Cet ensemble d'applications n'est pas encore conteneurisé. Mais faisons un cont
 pipenv install --dev
 ```
 </details>
-
-
-Nous allons également installer `python-dotenv` qui nous permet de charger les variables d'environnement que nous allons disposer dans le fichier `.env` :
-```bash
-pip install python-dotenv
-```
 
 ### 1.b. Exécuter la suite de tests localement
 
@@ -84,7 +78,17 @@ Indiquez la variable `DATABASE_URL` :
 
 ```bash
 # .env
-DATABASE_URL="postgresql://postgres@localhost/twitter_api_flask"
+DATABASE_URL="postgresql://postgres:<password_if_necessary>@localhost/twitter_api_flask"
+```
+
+Si vous obtenez un `sqlalchemy.exc.OperationalError`, vérifiez votre `DATABASE_URL`. Votre mot de passe ne doit pas contenir les symboles `<`, `>`.
+
+```bash
+# Exemple valide
+DATABASE_URL="postgresql://postgres:root@localhost/twitter_api_flask"
+
+# Exemple invalide
+DATABASE_URL="postgresql://postgres:<root>@localhost/twitter_api_flask"
 ```
 
 Vous devriez toujours avoir les bases de données `twitter_api_flask` et `twitter_api_flask_test` sur votre ordinateur portable.
