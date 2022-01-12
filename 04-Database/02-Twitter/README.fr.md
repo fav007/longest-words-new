@@ -429,35 +429,59 @@ class TweetsResource(Resource):
 
 </details>
 
-## Mettre en place Travis
+## Mettre en place GitHub Action
 
-La configuration de Travis pour un projet où vous avez une vraie base de données PostgreSQL n'est pas aussi triviale que pour un projet sans base de données. Voyons comment nous pouvons reprendre la **configuration de Travis** déjà évoquée :
+La configuration de GitHub Actions pour un projet où vous avez une vraie base de données PostgreSQL n'est pas aussi triviale que pour un projet sans base de données. Voyons comment nous pouvons reprendre la **configuration de GitHub Actions** déjà évoquée :
 
 ```bash
-touch .travis.yml
+mkdir -p .github/workflows
+touch .github/workflows/first-workflow.yml
 ```
 
 ```yml
-# .travis.yml
+# .github/workflows/first-workflow.yml
+name: Build and Tests
 
-language: python
-python: 3.8
-cache: pip
-dist: xenial
-addons:
-  postgresql: 10
-install:
-  - pip install pipenv
-  - pipenv install --dev
-before_script:
-  - psql -c 'CREATE DATABASE twitter_api_flask_test;' -U postgres
-env:
-  - DATABASE_URL="postgresql://localhost/twitter_api_flask"
-script:
-  - pipenv run nosetests
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: twitter_api_flask_test
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: psycopg2 prerequisites
+      run: sudo apt-get install libpq-dev
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pipenv
+        pipenv install --dev
+    - name: Test with nose
+      run: |
+        pipenv run nosetests
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost/twitter_api_flask
 ```
 
-Versionnez & poussez ce changement. Allez ensuite sur [github.com/marketplace/travis-ci](https://github.com/marketplace/travis-ci) pour ajouter `<github-nickname>/twitter-api-database` à votre plan Travis gratuit si ce n'est pas encore le cas.
+Versionnez & poussez ce changement. Allez ensuite sur votre repository Github et consultez l'onglet `Actions`. Vous devriez y voir un nouveau "workflow run" portant le nom votre commit. Vous pouvez cliquer dessus puis sur "Build" pour voir le build en tant réel.
+Au bout d'environ 3 minutes, les tests devraient passer et l'action devrait être validée. Si ce n'est pas le cas, ouvrez un ticket avec un TA.
 
 ## En savoir plus
 
