@@ -113,7 +113,7 @@ Bien sûr, c'est syntaxiquement valide (chaque lettre de `FEUN` peut être trouv
 Travaillons sur ce point dans une nouvelle branche de fonctionnalité :
 
 ```bash
-cgit checkout -b dictionary-api
+git checkout -b dictionary-api
 ```
 
 Comme nous suivons le paradigme TDD, nous devons ajouter un test :
