@@ -43,7 +43,7 @@ git checkout -b html-skeleton
 This commands _creates_ the branch and _switches_ to it. You can see the Git Bash prompt is updated and no longer displays `master`. You are ready to code in this branch!
 
 ```bash
-subl .
+code .
 ```
 
 Open the `index.html` file and write some HTML code.
@@ -89,7 +89,7 @@ You now need someone to look at your code, give some feedback and eventually mer
 
 Head over to `github.com/<user.github_nickname>/github-flow/settings/collaboration` (accessible through `Settings` > `Collaborators`) and add your seat neighbour to the repository by asking his/her github nickname. They should receive an email invitation to opt-in.
 
-Once this setup is done, ask them to go to the Pull Request page (should be PR #1) and review the code. If they have some comments (indentation, error, etc.), you need to do some fixes: go back to Sublime Text, in the same branch, update the code and do another commit. Push this commit to GitHub: you will see that the Pull Request automatically updates!
+Once this setup is done, ask them to go to the Pull Request page (should be PR #1) and review the code. If they have some comments (indentation, error, etc.), you need to do some fixes: go back to VS Code, in the same branch, update the code and do another commit. Push this commit to GitHub: you will see that the Pull Request automatically updates!
 
 In the end, if you and your reviewer agree on the code, the reviewer should **merge** the Pull Request. After merging, there is a button "Delete branch". We advise that you click on it, because in the GitHub flow, a **merged branch is a dead branch** and no work should be pushed to it anymore.
 

@@ -31,7 +31,7 @@ Nous allons utiliser [Flask](http://flask.pocoo.org/), un micro-framework permet
 ```bash
 pipenv install flask
 touch wsgi.py
-subl .
+code .
 ```
 
 Ouvrez le fichier `wsgi.py` et copiez-collez le code suivant :

@@ -324,7 +324,7 @@ services:
 ```bash
 docker-compose up
 ```
-  
+
 You will probably be asked to share some files with `docker-compose` (as it needs access to your application code to run it): click "accept".
 
 :point_right: Browse to [localhost:5000](http://localhost:5000) and [localhost:5000/tweets](http://localhost:5000/tweets).
@@ -435,7 +435,7 @@ We now have two services: `web` and `db`.
 
 Let's perform a few initial steps to setup the containers and databases we will need:
 
-:point_right: Make sure you have _"Unix line endings"_ for your `wait-for-it.sh` script: open it with **Sublime Text**, and click `View` > `Line Endings` > `Unix`, then save it ⚠️. This way, it will be correctly interpreted in your containers.
+:point_right: Make sure you have _"Unix line endings"_ for your `wait-for-it.sh` script: open it with **VS Code**, open the command pallette (CTRL+SHIFT+P) and type `Change All End Of Line Sequence`, then click on `CRLF`. This way, it will be correctly interpreted in your containers.
 
 :point_right: Bring up the stack, running containers in the background, and re-building the image for `web` : ```docker-compose up -d --build``` 🛠
 

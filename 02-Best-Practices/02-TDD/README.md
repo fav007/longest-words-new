@@ -83,7 +83,7 @@ touch game.py
 mkdir tests
 touch tests/test_game.py
 
-subl .
+code .
 ```
 
 Let's set up our test class, inheriting from [`unittest.TestCase`](https://docs.python.org/3.8/library/unittest.html#basic-example)

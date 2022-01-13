@@ -45,7 +45,7 @@ pipenv install pylint --dev
 
 ```bash
 touch wsgi.py
-subl . # Ouvrir Sublime Text dans le dossier actuel
+code . # Ouvrir VS Code dans le dossier actuel
 ```
 
 ### Flask Boilerplate
@@ -79,7 +79,7 @@ touch .env
 echo ".env" >> .gitignore # Vous ne voulez pas versionner vos variables d'environnement !
 ```
 
-Essayons cela tout de suite. Ouvrez le fichier `.env` dans Sublime Text et ajoutez une variable d'environnement fictive :
+Essayons cela tout de suite. Ouvrez le fichier `.env` dans VS Code et ajoutez une variable d'environnement fictive :
 
 ```bash
 # .env
