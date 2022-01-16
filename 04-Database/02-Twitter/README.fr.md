@@ -46,8 +46,8 @@ FLASK_ENV=development pipenv run flask run
 Comme dans l'exercice précédent, nous devons installer quelques outils :
 
 ```bash
-pipenv install psycopg2-binary gunicorn
-pipenv install flask-sqlalchemy flask-migrate flask-script
+pipenv install psycopg2-binary gunicorn python-dotenv
+pipenv install flask-sqlalchemy flask-migrate
 ```
 
 Nous devons configurer la base de données utilisée en utilisant une variable d'environnement, le plus simple est d'utiliser le package `python-dotenv` avec un fichier `.env` :
@@ -67,6 +67,8 @@ DATABASE_URL="postgresql://postgres:<password_if_necessary>@localhost/twitter_ap
 # DATABASE_URL="postgresql://localhost/twitter_api_flask"
 ```
 
+:point_right: Retournez sur [localhost:5000](http://localhost:5000/). Est-ce que tout va bien ?
+
 Si vous obtenez un `sqlalchemy.exc.OperationalError`, vérifiez votre `DATABASE_URL`. Votre mot de passe ne doit pas contenir les symboles `<`, `>`.
 
 ```bash
@@ -85,6 +87,9 @@ touch config.py
 
 ```python
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -161,44 +166,34 @@ Nous avons besoin d'une base de données locale pour notre application :
 
 ```bash
 winpty psql -U postgres -c "CREATE DATABASE twitter_api_flask"
+
+# MAC OS
+# createdb twitter_api_flask
 ```
 
-Ensuite, nous devons isoler un fichier utilitaire pour exécuter les commandes sans polluer le fichier principal `wsgi.py`. Voici comment cela se passe :
+Ensuite, nous devons modifier le fichier `app/__init__.py` pour que le module `flask-migrate` puisse identifier les changements effectués dans les modèle de l'app Python afin de les retranscrire en tant que migration dans la db:
 
-```bash
-touch manage.py
-```
 
 ```python
-# manage.py
+# app/__init__.py
+# [...]
+from flask_migrate import Migrate
 
-from flask_script import Manager
-from flask_migrate import Migrate, MigrateCommand
-
-from wsgi import create_app
-from app import db
-
-application = create_app()
-
-migrate = Migrate(application, db)
-
-manager = Manager(application)
-manager.add_command('db', MigrateCommand)
-
-if __name__ == '__main__':
-    manager.run()
+# After db.init_app(app)
+migrate = Migrate(app, db)
+# [...]
 ```
 
 Maintenant nous pouvons utiliser Alembic (lancez `pipenv graph` pour voir où il en est) !
 
 ```bash
-pipenv run python manage.py db init
+pipenv run flask db init
 ```
 
 Cette commande a créé un dossier `migrations`, avec `versions` qui est vide dedans. Il est temps de lancer la première migration avec la création de la table `tweets` à partir de la classe `Tweet` de `app/models.py`.
 
 ```bash
-pipenv run python manage.py db migrate -m "Create tweets table"
+pipenv run flask db migrate -m "Create tweets table"
 ```
 
 Ouvrez le dossier `migrations/versions` : voyez-vous un premier fichier de migration ? Allez-y, ouvrez-le et lisez-le ! C'est un fichier que vous **pouvez** modifier si vous n'êtes pas satisfait de ce qui a été généré automatiquement. En fait, c'est quelque chose que l'outil vous dit :
@@ -210,10 +205,10 @@ Ouvrez le dossier `migrations/versions` : voyez-vous un premier fichier de migra
 Lorsque vous êtes satisfait de la migration, il est temps de l'exécuter sur la base de données locale :
 
 ```bash
-pipenv run python manage.py db upgrade
+pipenv run flask db upgrade
 ```
 
-Et c'est tout ! Il y a maintenant une table `tweets` dans la base de données locale `witter_api_flask`. Elle est vide pour l'instant, mais elle existe bel et bien !
+Et c'est tout ! Il y a maintenant une table `tweets` dans la base de données locale `twitter_api_flask`. Elle est vide pour l'instant, mais elle existe bel et bien !
 
 ## Ajouter un premier tweet à partir de shell
 
@@ -231,6 +226,7 @@ pipenv run flask shell
 >>> db.session.query(Tweet).all()
 # Hooray!
 ```
+Tapez `exit()` puis Entrée pour sortir du "flask shell".
 
 ## Mise à jour du code du contrôleur de l'API
 
@@ -251,12 +247,12 @@ Regardez le message d'erreur dans le terminal et essayez de corriger le code _vo
 
 ```python
 # app/apis/tweets.py
-# Add this at the beginning of the file:
+# Ajouter cette ligne en début de fichier
 from app import db
 
-# Then in the `TweetResource#get` replace this line:
+# Dans `TweetResource#get` remplacer cette ligne:
 #   tweet = tweet_repository.get(tweet_id))
-# with:
+# par:
 tweet = db.session.query(Tweet).get(tweet_id)
 ```
 
@@ -267,6 +263,14 @@ Félicitations ! Le site [localhost:5000/tweets/1](http://localhost:5000/tweets/
 Laissons seulement la route `GET /tweets/:id` fonctionner, sans toucher aux autres, et essayons de corriger les tests d'abord avant d'y revenir.
 
 ## Mettre à jour les tests
+
+🚨 **Mise à jour de flask-testing**
+Lancez la commande `pipenv graph` et identifiez la version du package `flask-testing` que vous avez installé hier. Si la version est inférieure à **0.8.1**, il faut absolument la mettre à jour pour pouvoir faire tourner les tests avec une base de donnée!
+Pour celà, ouvrez le fichier `Pipfile`, et remplacer la ligne `flask-testing = "*"` par `flask-testing = "~=0.8.1"`, puis dans le terminal:
+
+```bash
+pipenv install --dev
+```
 
 Ouvrez le fichier `tests/apis/test_tweet_views.py`. Avant de se lancer dans le remplacement du `tweet_repository` par un `db.session`, faisons une pause et réfléchissons à ce que nous faisons.
 
@@ -289,6 +293,9 @@ Voici comment nous allons atteindre cet objectif. Tout d'abord, nous devons cré
 
 ```bash
 winpty psql -U postgres -c "CREATE DATABASE twitter_api_flask_test"
+
+# MAC OS
+# createdb twitter_api_flask_test
 ```
 
 Et puis nous pouvons mettre à jour notre classe `TestTweetViews` avec :
@@ -375,6 +382,9 @@ Et voici le code de `app/apis/tweets.py` où nous devons mettre à jour les occu
 ```python
 # [...]
 
+@api.route('/<int:id>')  # route extension (ie: /tweets/<int:id>)
+@api.response(404, 'Tweet not found')
+@api.param('id', 'The tweet unique identifier')
 class TweetResource(Resource):
     @api.marshal_with(json_tweet)
     def get(self, id):
@@ -418,39 +428,67 @@ class TweetsResource(Resource):
             return tweet, 201
         else:
             return abort(422, "Tweet text can't be empty")
+
+    @api.marshal_with(json_tweet)
+    def get(self):
+        return db.session.query(Tweet).all(), 201
 ```
 
 </details>
 
-## Mettre en place Travis
+## Mettre en place GitHub Action
 
-La configuration de Travis pour un projet où vous avez une vraie base de données PostgreSQL n'est pas aussi triviale que pour un projet sans base de données. Voyons comment nous pouvons reprendre la **configuration de Travis** déjà évoquée :
+La configuration de GitHub Actions pour un projet où vous avez une vraie base de données PostgreSQL n'est pas aussi triviale que pour un projet sans base de données. Voyons comment nous pouvons reprendre la **configuration de GitHub Actions** déjà évoquée :
 
 ```bash
-touch .travis.yml
+mkdir -p .github/workflows
+touch .github/workflows/first-workflow.yml
 ```
 
 ```yml
-# .travis.yml
+# .github/workflows/first-workflow.yml
+name: Build and Tests
 
-language: python
-python: 3.8
-cache: pip
-dist: xenial
-addons:
-  postgresql: 10
-install:
-  - pip install pipenv
-  - pipenv install --dev
-before_script:
-  - psql -c 'CREATE DATABASE twitter_api_flask_test;' -U postgres
-env:
-  - DATABASE_URL="postgresql://localhost/twitter_api_flask"
-script:
-  - pipenv run nosetests
+on: push
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: twitter_api_flask_test
+        ports:
+          - 5432:5432
+        # needed because the postgres container does not provide a healthcheck
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.9
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: psycopg2 prerequisites
+      run: sudo apt-get install libpq-dev
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pipenv
+        pipenv install --dev
+    - name: Test with nose
+      run: |
+        pipenv run nosetests
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost/twitter_api_flask
 ```
 
-Versionnez & poussez ce changement. Allez ensuite sur [github.com/marketplace/travis-ci](https://github.com/marketplace/travis-ci) pour ajouter `<github-nickname>/twitter-api-database` à votre plan Travis gratuit si ce n'est pas encore le cas.
+Versionnez & poussez ce changement. Allez ensuite sur votre repository Github et consultez l'onglet `Actions`. Vous devriez y voir un nouveau "workflow run" portant le nom votre commit. Vous pouvez cliquer dessus puis sur "Build" pour voir le build en tant réel.
+Au bout d'environ 3 minutes, les tests devraient passer et l'action devrait être validée. Si ce n'est pas le cas, ouvrez un ticket avec un TA.
 
 ## En savoir plus
 
