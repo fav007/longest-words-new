@@ -17,7 +17,7 @@ Vous avez tout lu ? C'est parti pour le codage !
 ```bash
 cd ~/code/<user.github_nickname>/reboot-python
 cd 01-OOP/06-Data-Structures
-subl .
+code .
 ```
 
 ## Exercice

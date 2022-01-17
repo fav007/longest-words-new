@@ -43,7 +43,7 @@ git checkout -b html-skeleton
 Ces commandes _créent_ la branche et _s'y connectent_. Vous pouvez voir que l'invite de commande Git Bash est mise à jour et n'affiche plus `master`. Vous êtes donc prêt à coder dans cette branche !
 
 ```bash
-subl .
+code .
 ```
 
 Ouvrez le fichier `index.html` et écrivez du code HTML.
@@ -89,7 +89,7 @@ Vous avez maintenant besoin de quelqu'un pour examiner votre code, donner son av
 
 Rendez-vous sur `github.com/<user.github_nickname>/github-flow/settings/collaboration` (accessible par `Settings` > `Collaborators`) et ajoutez votre voisin de table au repository en lui demandant son nom sur GitHub. Il devrait recevoir une invitation par e-mail à accepter.
 
-Une fois cette configuration effectuée, demandez-leur d'aller sur la page Pull Request (qui devrait être PR #1) et de revoir le code. S'ils ont des commentaires (indentation, erreur, etc.), c'est que vous devez faire quelques corrections : retournez dans Sublime Text, dans la même branche, mettez à jour le code et faites un autre versionnage. Poussez ce versionnage sur GitHub : vous verrez que la Pull Request se met automatiquement à jour !
+Une fois cette configuration effectuée, demandez-leur d'aller sur la page Pull Request (qui devrait être PR #1) et de revoir le code. S'ils ont des commentaires (indentation, erreur, etc.), c'est que vous devez faire quelques corrections : retournez dans VS Code, dans la même branche, mettez à jour le code et faites un autre versionnage. Poussez ce versionnage sur GitHub : vous verrez que la Pull Request se met automatiquement à jour !
 
 A la fin, si vous et votre relecteur êtes d'accord sur le code, le relecteur doit **merger** la Pull Request. Après le merge, il y a un bouton "Delete branch". Nous vous conseillons de cliquer dessus, car dans le GitHub flow, une branche **mergée est une branche morte** et plus rien ne doit être pushé sur cette branche désormais.
 

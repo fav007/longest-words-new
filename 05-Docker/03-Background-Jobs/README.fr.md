@@ -149,7 +149,7 @@ Si non, vérifiez que le serveur Redis fonctionne ! Si vous n'arrivez pas à le 
 
 Vous pouvez maintenant arrêter le processus Celery en pressant `Ctrl` + `C` deux fois.
 
-Il est temps d'ajouter une première tâche. Retournez dans Sublime Text dans le fichier `tasks.py` et au bas de ce fichier, définissez une fonction. Cette fonction doit être une tâche longue puisqu'elle va être exécutée par le programme (worker). Pour en simuler une, nous pouvons utiliser [`time.sleep()`](https://stackoverflow.com/questions/510348/how-can-i-make-a-time-delay-in-python).
+Il est temps d'ajouter une première tâche. Retournez dans VS Code dans le fichier `tasks.py` et au bas de ce fichier, définissez une fonction. Cette fonction doit être une tâche longue puisqu'elle va être exécutée par le programme (worker). Pour en simuler une, nous pouvons utiliser [`time.sleep()`](https://stackoverflow.com/questions/510348/how-can-i-make-a-time-delay-in-python).
 
 Nous allons accompagner cette tâche avec `@celery.task()` pour que le processus Celery en soit conscient.
 

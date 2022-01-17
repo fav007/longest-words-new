@@ -31,7 +31,7 @@ Nous allons utiliser [Flask](http://flask.pocoo.org/), un micro-framework permet
 ```bash
 pipenv install flask
 touch wsgi.py
-subl .
+code .
 ```
 
 Ouvrez le fichier `wsgi.py` et copiez-collez le code suivant :
@@ -217,7 +217,7 @@ git push origin http-server
 
 Avant de pouvoir déployer notre petite application web, nous devons créer un compte Heroku. Si vous en avez déjà un, vous pouvez l'utiliser. Sinon, [inscrivez-vous](https://signup.heroku.com/) (c'est gratuit pour essayer). Mettez une adresse e-mail à laquelle vous pouvez accéder facilement car vous devrez cliquer sur un lien de confirmation.
 
-Une fois votre compte créé, vous devez installer l'outil de ligne de commande. Allez sur [cette page Heroku Dev Center](https://devcenter.heroku.com/articles/getting-started-with-python#set-up), téléchargez le CLI et installez-le. Ne laissez pas l'option `Git` cochée dans les composants à installer car vous l'avez déjà ! Laissez les options `Heroku CLI` et `Set PATH...` cochées.
+Une fois votre compte créé, si vous n'avez pas encore installé l'outil de ligne de commande d'Heroku, il est temps de le faire!  Allez sur [cette page Heroku Dev Center](https://devcenter.heroku.com/articles/getting-started-with-python#set-up), téléchargez le CLI et installez-le. Ne laissez pas l'option `Git` cochée dans les composants à installer car vous l'avez déjà ! Laissez les options `Heroku CLI` et `Set PATH...` cochées.
 
 Ouvrez Git Bash et connectez-vous :
 

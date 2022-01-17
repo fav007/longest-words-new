@@ -1,4 +1,4 @@
-# SQLAlchemy 
+# SQLAlchemy
 
 Before going back to yesterday's `twitter-api` repository, let's create a brand new Flask app (without the factory pattern `create_app`).
 
@@ -45,7 +45,7 @@ pipenv install pylint --dev
 
 ```bash
 touch wsgi.py
-subl . # Open Sublime Text in the current folder.
+code . # Open VS Code in the current folder.
 ```
 
 ### Flask Boilerplate
@@ -79,7 +79,7 @@ touch .env
 echo ".env" >> .gitignore # You don't want to commit your env variables!
 ```
 
-Let's try this right away. Open the `.env` file in Sublime Text and add a dummy environment variable:
+Let's try this right away. Open the `.env` file in VS Code and add a dummy environment variable:
 
 ```bash
 # .env

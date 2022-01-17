@@ -216,7 +216,7 @@ Ajoutons un `Jenkinsfile` à notre projet pour indiquer à Jenkins comment le co
 touch Jenkinsfile
 ```
 
-Ouvrez ce fichier dans Sublime Text et copiez-collez la configuration suivante :
+Ouvrez ce fichier dans VS Code et copiez-collez la configuration suivante :
 
 ```groovy
 pipeline {

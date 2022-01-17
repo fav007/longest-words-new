@@ -7,7 +7,7 @@ Python scripts can read arguments passed on the command line. This may come in h
 ```bash
 cd ~/code/<user.github_nickname>/reboot-python
 cd 01-OOP/02-System-Parameters
-subl .
+code .
 nosetests
 pipenv run pylint calc.py
 ```

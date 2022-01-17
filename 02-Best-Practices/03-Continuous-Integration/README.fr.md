@@ -71,7 +71,7 @@ jobs:
         pipenv run nosetests
 ```
 
-Enregistrez ce fichier dans Sublime Text, et effectuez un versionnage :
+Enregistrez ce fichier dans VS Code, et effectuez un versionnage :
 
 ```bash
 git add .github/workflows/python-ci.yml
@@ -87,8 +87,6 @@ Vous devriez avoir un versionnage. Maintenant retournez dans le terminal :
 ```bash
 git push origin master
 ```
-
-:warning: Ne passe PAS l'option `--force` lorsque tu pousses ton code avec git car cela empêchera sûrement Travis de détecter tes changements.
 
 Quand le push est terminé, retournez à la page, et **rechargez** la. Vous devriez voir le versionnage avec un cercle jaune, puis une coche verte ! Ceci est l'intégration entre GitHub et Github Actions. Elle s'exécutera à chaque fois que vous enverrez des versionnages à GitHub.
 

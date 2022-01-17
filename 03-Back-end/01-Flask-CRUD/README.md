@@ -16,7 +16,7 @@ mkdir flask-101 && cd $_
 pipenv --python 3.8
 pipenv install flask gunicorn
 touch wsgi.py
-subl . # Open Sublime Text in the current folder.
+code . # Open VS Code in the current folder.
 ```
 
 Curious what packages Flask is relying on? Run this in your terminal:
@@ -159,7 +159,7 @@ mkdir tests
 touch tests/test_views.py
 ```
 
-Open the file in Sublime Text, read and copy-paste this.
+Open the file in VS Code, read and copy-paste this.
 
 ```python
 # tests/test_views.py
@@ -547,7 +547,7 @@ touch consumer.ps1
 powershell -ExecutionPolicy bypass ./consumer.ps1
 ```
 
-Open your `consumer.ps1` file in Sublime Text. We want you to implement a function `Get-Products` so that the following code queries the API and prints all the products.
+Open your `consumer.ps1` file in VS Code. We want you to implement a function `Get-Products` so that the following code queries the API and prints all the products.
 
 :bulb: Hint: you might need the [`Invoke-RestMethod`](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-6) function!
 

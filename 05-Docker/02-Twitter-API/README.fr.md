@@ -440,7 +440,7 @@ Nous avons maintenant deux services : `web` et `db`.
 
 Effectuons quelques opérations initiales pour configurer les conteneurs et les bases de données dont nous aurons besoin :
 
-:point_right: Assurez-vous d'avoir des _"terminaisons de ligne Unix"_ pour votre script `wait-for-it.sh` : ouvrez-le avec **Sublime Text**, et cliquez sur `View` > `Line Endings` > `Unix`, puis enregistrez-le ⚠️. De cette façon, il sera correctement interprété dans vos conteneurs.
+:point_right: Assurez-vous d'avoir des _"terminaisons de ligne Unix"_ pour votre script `wait-for-it.sh` : ouvrez-le avec **VS Code**, et ouvrez la palette de commande (CTRL+SHIFT+P). Tapez `Change End Of Line Sequence`, puis cliquez sur `CRLF`. De cette façon, il sera correctement interprété dans vos conteneurs.
 
 :point_right: Assemblez les applications, exécutez les conteneurs en arrière-plan, et recompilez l'image pour `web` : ``docker-compose up -d --build`` 🛠
 
