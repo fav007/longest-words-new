@@ -11,7 +11,7 @@ Dans cet exercice, nous allons nous concentrer sur le débogage interactif et l'
 ```bash
 cd ~/code/<user.github_nickname>/reboot-python
 cd 01-OOP/04-Debugging
-subl .
+code .
 ```
 
 ## Le Débogueur Python
@@ -49,7 +49,7 @@ Le programme **s'arrêtera** à la ligne où vous avez inséré le `pdb.set_trac
 Il est temps de jouer avec le débogueur. De là, vous pouvez faire deux choses :
 
 1. Contrôler le flux du programme, en indiquant au débogueur d'exécuter la ligne suivante, d'entrer dans une fonction ou d'en sortir.
-2. Jetez un coup d'oeil à la mémoire actuelle, c'est-à-dire à ce qui est stocké dans les variables à cet instant. Le programme est arrêté afin que vous puissiez examiner de plus près ses composants internes. 
+2. Jetez un coup d'oeil à la mémoire actuelle, c'est-à-dire à ce qui est stocké dans les variables à cet instant. Le programme est arrêté afin que vous puissiez examiner de plus près ses composants internes.
 
 Tapez ceci:
 

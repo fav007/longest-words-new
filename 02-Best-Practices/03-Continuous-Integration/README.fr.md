@@ -42,7 +42,7 @@ Pour ce faire, Travis lit le fichier `./.travis.yml` à la racine de votre repo 
 
 ```bash
 touch .travis.yml
-subl .travis.yml
+code .travis.yml
 ```
 
 ```yml
@@ -58,7 +58,7 @@ script:
   - pipenv run nosetests
 ```
 
-Enregistrez ce fichier dans Sublime Text, et effectuez un versionnage :
+Enregistrez ce fichier dans VS Code, et effectuez un versionnage :
 
 ```bash
 git add .travis.yml

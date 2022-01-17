@@ -7,7 +7,7 @@ Une autre façon de modifier le comportement d'un script Python (autre que les a
 ```bash
 cd ~/code/<user.github_nickname>/reboot-python
 cd 01-OOP/03-Environment
-subl .
+code .
 nosetests
 pipenv run pylint flask_option.py
 ```

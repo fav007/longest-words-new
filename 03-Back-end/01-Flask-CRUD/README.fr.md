@@ -16,7 +16,7 @@ mkdir flask-101 && cd $_
 pipenv --python 3.8
 pipenv install flask gunicorn
 touch wsgi.py
-subl . # Ouvrez Sublime Text dans le dossier actuel.
+code . # Ouvrez VS Code dans le dossier actuel.
 ```
 
 Vous êtes curieux de savoir sur quels paquets Flask s'appuie ? Exécutez ceci dans votre terminal :
@@ -160,7 +160,7 @@ mkdir tests
 touch tests/test_views.py
 ```
 
-Ouvrez le fichier dans Sublime Text, lisez et copiez-collez ceci.
+Ouvrez le fichier dans VS Code, lisez et copiez-collez ceci.
 
 ```python
 # tests/test_views.py
@@ -488,7 +488,7 @@ def create_one_product():
     name = data.get('name')
 
     if name is None:
-        abort(400)  # L'absence de champ nécessaire est une Erreur de Requête Erronée 
+        abort(400)  # L'absence de champ nécessaire est une Erreur de Requête Erronée
 
     if name == '' or not isinstance(name, str):
         abort(422)  # Un mauvais format pour le champ requis est une Erreur d'Entité Non Traitable (Unprocessable Entity Error).
@@ -550,7 +550,7 @@ touch consumer.ps1
 powershell -ExecutionPolicy bypass ./consumer.ps1
 ```
 
-Ouvrez votre fichier `consumer.ps1` dans Sublime Text. Nous voulons que vous implémentiez une fonction `Get-Products` pour que le code suivant interroge l'API et affiche tous les produits.
+Ouvrez votre fichier `consumer.ps1` dans VS Code. Nous voulons que vous implémentiez une fonction `Get-Products` pour que le code suivant interroge l'API et affiche tous les produits.
 
 :bulb: Astuce : vous pourriez avoir besoin de la fonction [`Invoke-RestMethod`](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.utility/invoke-restmethod?view=powershell-6) !
 

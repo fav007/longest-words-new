@@ -33,7 +33,7 @@ type(4)
 ```bash
 cd ~/code/<user.github_nickname>/reboot-python
 cd 01-OOP/05-String-Manipulation
-subl .
+code .
 nosetests
 pipenv run pylint string_methods.py
 ```

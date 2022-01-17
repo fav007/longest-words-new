@@ -31,7 +31,7 @@ We are going to use [Flask](http://flask.pocoo.org/), a microframework to quickl
 ```bash
 pipenv install flask
 touch wsgi.py
-subl .
+code .
 ```
 
 Open the `wsgi.py` file and copy paste the following code:
