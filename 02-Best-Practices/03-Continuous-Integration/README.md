@@ -42,7 +42,7 @@ In order to do that, Travis reads the `./.travis.yml` file at the root of your r
 
 ```bash
 touch .travis.yml
-subl .travis.yml
+code .travis.yml
 ```
 
 ```yml
@@ -58,7 +58,7 @@ script:
   - pipenv run nosetests
 ```
 
-Save this file in Sublime Text, and perform a commit:
+Save this file in VS Code, and perform a commit:
 
 ```bash
 git add .travis.yml

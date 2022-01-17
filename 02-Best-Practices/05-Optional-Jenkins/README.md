@@ -216,7 +216,7 @@ Let's add a `Jenkinsfile` to our project to tell Jenkins how to build it. It's t
 touch Jenkinsfile
 ```
 
-Open this file in Sublime Text and copy-paste the following configuration:
+Open this file in VS Code and copy-paste the following configuration:
 
 ```groovy
 pipeline {

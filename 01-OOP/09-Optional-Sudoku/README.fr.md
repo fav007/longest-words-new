@@ -17,7 +17,7 @@ Un sudoku est valide si et seulement si :
 ```bash
 cd ~/code/<user.github_nickname>/reboot-python
 cd 01-OOP/09-Optional-Sudoku
-subl .
+code .
 ```
 
 ## Modèle de données

@@ -9,7 +9,7 @@ cd ~/code/<user.github_nickname>/reboot-python
 git pull upstream master # Récupérer la dernière version de l'exercice
 
 cd 01-OOP/01-Sum-Of-Three
-subl . # Ouvrez le dossier dans Sublime Text
+code . # Ouvrez le dossier dans VS Code
 ```
 
 ## Procédure
@@ -40,7 +40,7 @@ Le but de cet exercice était de vous montrer comment exécuter les tests pour �
 
 Si vous travaillez dans un environnement Windows, il vous sera utile d'apprendre [**Powershell**](https://docs.microsoft.com/powershell/), et vous pouvez également l'utiliser sur macOS et Linux.
 
-Écrivons notre tout premier script PowerShell. Ouvrez le fichier `hello.ps1` dans Sublime Text et copiez-collez l'instruction suivante [`Write-Output`](https://docs.microsoft.com/powershell/module/microsoft.powershell.utility/write-output) :
+Écrivons notre tout premier script PowerShell. Ouvrez le fichier `hello.ps1` dans VS Code et copiez-collez l'instruction suivante [`Write-Output`](https://docs.microsoft.com/powershell/module/microsoft.powershell.utility/write-output) :
 
 ```powershell
 Write-Output "Hello World"

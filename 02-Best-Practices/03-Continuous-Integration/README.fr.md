@@ -9,14 +9,15 @@ Le but de cet exercice est de lier notre logiciel de contrôle de version avec u
 Comme pour les logiciels de contrôle de version, il existe de nombreux outils permettant de réaliser de l'intégration continue :
 
 - [Jenkins](https://jenkins.io/), le logiciel de CI le plus populaire (vous devez l'installer)
+- [Github Actions](https://github.com/features/actions), l'outil de Github pour mettre en place des workflows et du CI/CD
 - [Travis](https://travis-ci.com/), le service de CI **cloud** le plus populaire
 - [Beaucoup d'autres](https://en.wikipedia.org/wiki/Comparison_of_continuous_integration_software)
 
-Pour garder cet exercice simple, nous utiliserons Travis, car il s'intègre facilement à GitHub (et vous verrez que c'est important) sans aucun effort de configuration de la part du développeur. De plus, il est **gratuit** pour les repositories publics de GitHub !
+Pour garder cet exercice simple, nous utiliserons Github Actions, car c'est l'outil directement intégré dans GitHub (et vous verrez que c'est important) sans aucun effort de configuration de la part du développeur. De plus, il est **gratuit** pour les repositories publics de GitHub !
 
-## Installation du service
+## Mise en place
 
-Nous allons déployer le repository que vous avez créé dans l'exercice précédent. D'abord, créez un repository vide `longest-word` dans votre compte Github. Après cela, vous pouvez pousser vos changements :
+Nous allons déployer le repository que vous avez créé dans l'exercice 02-TDD. D'abord, créez un repository vide `longest-word` dans votre compte Github. Après cela, vous pouvez pousser vos changements :
 
 ```bash
 cd ~/code/<user.github_nickname>/longest-word
@@ -30,39 +31,51 @@ git remote add origin git@github.com:<user.github_nickname>/longest-word.git
 git push origin master
 ```
 
-Allez sur [github.com/marketplace/travis-ci](https://github.com/marketplace/travis-ci) et cliquez sur le bouton vert "Set up a free trial". Vous arriverez sur une section où vous pourrez choisir l'option `Open Source - $0`. Cliquez ensuite sur le bouton vert "Install it for free". Suivez les instructions.
 
-Une fois cette étape de configuration effectuée, vous pouvez vous rendre sur [github.com/<user.github_nickname>/longest-word/settings/installations](https://github.com/<user.github_nickname>/longest-word/settings/installations) et voyez que **Travis CI** a été installé dans votre repository. Super !
+## Workflow CI
 
-## Configuration
+Vous devez maintenant écrire un script de configuration pour le CI (Intégration Continue). Ces outils sont _génériques_, ils peuvent construire des programmes dans de nombreux langages, avec de nombreux frameworks. Nous devons être spécifiques et expliquer à Githun Actions que notre projet est un projet Python 3, que nous utilisons `pipenv` pour gérer les dépendances externes et que nous utilisons `nosetests` pour exécuter les tests.
 
-Vous devez maintenant écrire un script de configuration pour le CI (Intégration Continue). Ces outils sont _génériques_, ils peuvent construire des programmes dans de nombreux langages, avec de nombreux frameworks. Nous devons être spécifiques et expliquer à Travis que notre projet est un projet Python 3, que nous utilisons `pipenv` pour gérer les dépendances externes et que nous utilisons `nosetests` pour exécuter les tests.
-
-Pour ce faire, Travis lit le fichier `./.travis.yml` à la racine de votre repo :
+Pour se faire, Github va lire le fichier `.python-ci.yml` situé dans votre dossier `.github/workflows` :
 
 ```bash
-touch .travis.yml
-subl .travis.yml
+mkdir -p .github/workflows
+touch .github/workflows/.python-ci.yml
 ```
 
 ```yml
-# .travis.yml
+# .python-ci.yml
 
-language: python
-python: 3.8
-dist: xenial
-install:
-  - pip install pipenv
-  - pipenv install --dev
-script:
-  - pipenv run nosetests
+name: basic CI
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: "3.8"
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pipenv
+        pipenv install --dev
+    - name: Test with nose
+      run: |
+        pipenv run nosetests
 ```
 
-Enregistrez ce fichier dans Sublime Text, et effectuez un versionnage :
+Enregistrez ce fichier dans VS Code, et effectuez un versionnage :
 
 ```bash
-git add .travis.yml
-git commit -m "Configure Travis to run nosetests"
+git add .github/workflows/python-ci.yml
+git commit -m "Configure Github Actions CI to run nosetests"
 ```
 
 Génial ! Avant de pousser, allez sur cette page :
@@ -75,9 +88,7 @@ Vous devriez avoir un versionnage. Maintenant retournez dans le terminal :
 git push origin master
 ```
 
-:warning: Ne passe PAS l'option `--force` lorsque tu pousses ton code avec git car cela empêchera sûrement Travis de détecter tes changements.
-
-Quand le push est terminé, retournez à la page, et **rechargez** la. Vous devriez voir le versionnage avec un cercle jaune, puis une coche verte ! Ceci est l'intégration entre GitHub et Travis CI. Elle s'exécutera à chaque fois que vous enverrez des versionnages à GitHub, grâce à la fonction [GitHub webhooks](https://developer.github.com/webhooks/) et l'intégration de [Travis API](https://docs.travis-ci.com/user/developer/#API-V3).
+Quand le push est terminé, retournez à la page, et **rechargez** la. Vous devriez voir le versionnage avec un cercle jaune, puis une coche verte ! Ceci est l'intégration entre GitHub et Github Actions. Elle s'exécutera à chaque fois que vous enverrez des versionnages à GitHub.
 
 ## Intégration Continue & Pull Request
 
@@ -130,9 +141,9 @@ Au Wagon, les développeurs ouvrent des Pull Request très tôt pour leurs branc
 
 ![](https://res.cloudinary.com/wagon/image/upload/v1560714921/kitt-wip-prs_obp6e7.png)
 
-Revenons à notre Pull Request. Si vous scrollez un peu en dessous de la description de la PR et de la liste des versionnages, vous verrez l'intégration de Travis CI :
+Revenons à notre Pull Request. Si vous scrollez un peu en dessous de la description de la PR et de la liste des versionnages, vous verrez l'intégration avec Github Actions :
 
-![](https://res.cloudinary.com/wagon/image/upload/v1560714687/github-travis-failing_n0d78e.png)
+![](img/github_actions_picture.png)
 
 Cette fonctionnalité est vraiment importante. Vous avez un retour direct, et directement dans GitHub, sur l'état de la construction de votre branche. Bien sûr, ici nous _voulons_ avoir une branche rouge car nous avons ajouté un test mais n'avons pas encore implémenté le comportement. Néanmoins, vous pouvez imaginer que quelqu'un qui push du code et oublie d'exécuter les tests localement sur sa machine sera averti directement sur GitHub qu'il a cassé quelque chose dans le code.
 
@@ -180,7 +191,7 @@ class Game:
 
 <br>
 
-N'oubliez pas d'exécuter les tests localement jusqu'à ce que vous ayez 5 tests réussis. Lorsque vous avez terminé, il est temps d'observer le résultat sur GitHub / Travis CI !
+N'oubliez pas d'exécuter les tests localement jusqu'à ce que vous ayez 5 tests réussis. Lorsque vous avez terminé, il est temps d'observer le résultat sur GitHub / Github Actions!
 
 ```bash
 git add .
@@ -188,7 +199,7 @@ git commit -m "Feature complete: Dictionary check of attempt"
 git push origin dictionary-api
 ```
 
-Retournez à votre page Pull Request, vous devriez voir les icônes passer de croix rouges à points jaunes. Cela signifie que Travis CI est en train de compiler le code avec le dernier versionnage. Attendez quelques secondes, et il devrait mettre à jour le statut. Voici ce que vous devriez voir :
+Retournez à votre page Pull Request, vous devriez voir les icônes passer de croix rouges à points jaunes. Cela signifie que Github Actions est en train de compiler le code avec le dernier versionnage. Attendez quelques secondes, et il devrait mettre à jour le statut. Voici ce que vous devriez voir :
 
 ![](https://res.cloudinary.com/wagon/image/upload/v1560714701/github-travis-passing_vppc1l.png)
 
@@ -196,7 +207,7 @@ Beau travail 🎉 ! Invitez votre buddy en tant que collaborateur de repo pour r
 
 ## Conclusion
 
-L'ajout de tests dans un repository et coupler GitHub avec un service comme Travis CI permet au développeur d'avoir l'esprit tranquille lorsqu'il ajoute du code, de vérifier les éventuelles régressions, et d'exercer l'ensemble des tests à _chaque_ versionnage !
+L'ajout de tests dans un repository et coupler GitHub avec un service comme Github Actions permet au développeur d'avoir l'esprit tranquille lorsqu'il ajoute du code, de vérifier les éventuelles régressions, et d'exercer l'ensemble des tests à _chaque_ versionnage !
 
 Avant de d'avancer plus loin dans le DevOps avec le prochain exercice sur le déploiement continu, quelques derniers conseils :
 

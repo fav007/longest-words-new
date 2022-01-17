@@ -26,7 +26,7 @@ Utilisons cette approche :
 
 ```bash
 mkdir app             # Il s'agit du dossier de notre application principale.
-touch app/__init__.py # Et ouvrez ce fichier dans Sublime Text
+touch app/__init__.py # Et ouvrez ce fichier dans VS Code
 ```
 
 ```python
@@ -517,7 +517,7 @@ class TestTweetViews(TestCase):
         return app
 
     def setUp(self):
-        tweet_repository.clear() 
+        tweet_repository.clear()
 
     def test_tweet_show(self):
         first_tweet = Tweet("First tweet")
