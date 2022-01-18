@@ -9,13 +9,13 @@ Nous avons déjà mis en place une application web et une base de données, et a
 ## 0. Configuration
 
 Nous allons continuer à partir de la correction d'hier :
-:point_right: [https://github.com/mattrousseau/twitter-api-solution](https://github.com/mattrousseau/twitter-api-solution)
+:point_right: [https://github.com/lewagon/twitter-api-solution](https://github.com/lewagon/twitter-api-solution)
 
 Commencez par le code suivant (en utilisant la branche `docker`) :
 
 ```bash
 cd ~/code/<user.github_nickname>
-git clone git@github.com:mattrousseau/twitter-api-solution.git twitter-api-docker
+git clone git@github.com:lewagon/twitter-api-solution.git twitter-api-docker
 cd twitter-api-docker
 git checkout docker  # récupérer cette branche avant de changer la version distante
 git remote rm origin
